@@ -1,6 +1,7 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
+import styles from '../../../admin/admin.module.css'; // ★ CSSモジュールをインポート（パスに注意）
 
 export default function SuccessPage() {
   const router = useRouter();
@@ -16,16 +17,19 @@ export default function SuccessPage() {
   };
 
   return (
-    <div style={styles.container}>
-      <h1 style={styles.h1}>送信完了</h1>
-      <p>迷子物の情報を送信しました。</p>
-      <div style={styles.buttonGroup}>
-        <button style={styles.button} onClick={handleContinue}>続けて送信</button>
-        <button style={styles.buttonSecondary} onClick={handleFinish}>送信を終了</button>
+    <div className={styles.card}>
+      <h1 className={styles.header}>送信完了</h1>
+      <p style={{ textAlign: 'center' }}>
+        迷子物の情報を送信しました。
+      </p>
+      <div className={styles.buttonGroup}>
+        <button onClick={handleContinue} className={`${styles.btn} ${styles.primary}`}>
+          続けて送信
+        </button>
+        <button onClick={handleFinish} className={`${styles.btn} ${styles.secondary}`}>
+          管理者トップへ戻る
+        </button>
       </div>
     </div>
   );
 }
-
-// ... (stylesの定義は同じ、または共通のCSSファイルから読み込む)
-const styles: { [key: string]: React.CSSProperties } = { /* ... */ };

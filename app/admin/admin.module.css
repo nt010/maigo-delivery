@@ -1,0 +1,112 @@
+/* /admin 以下のページにだけ適用されるスタイル */
+
+/* カード型の共通コンテナ */
+.card {
+  max-width: 500px;
+  margin: 40px auto;
+  padding: 30px;
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e5e7eb;
+}
+
+/* ヘッダー */
+.header {
+  text-align: center;
+  margin-bottom: 25px;
+  font-size: 1.75rem; /* 28px */
+  font-weight: 600;
+  color: #333;
+}
+
+/* フォーム関連 */
+.formGroup {
+  margin-bottom: 20px;
+}
+
+.label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 500;
+}
+
+.input,
+.select {
+  width: 100%;
+  padding: 12px;
+  box-sizing: border-box;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  font-size: 1rem;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.input:focus,
+.select:focus {
+  outline: none;
+  border-color: #0070f3;
+  box-shadow: 0 0 0 3px rgba(0, 112, 243, 0.2);
+}
+
+/* ボタン関連 */
+.btn {
+  display: inline-block;
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 600;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 0.2s, transform 0.1s;
+}
+
+.btn:active {
+  transform: translateY(1px);
+}
+
+.primary {
+  background-color: #0070f3;
+  color: white;
+}
+.primary:hover {
+  background-color: #005bb5;
+}
+.primary:disabled {
+  background-color: #a0c3e8;
+  cursor: not-allowed;
+}
+
+.secondary {
+  background-color: #666;
+  color: white;
+}
+.secondary:hover {
+  background-color: #444;
+}
+
+.buttonGroup {
+  margin-top: 25px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* その他 */
+.errorMessage {
+  color: #ef4444;
+  text-align: center;
+  margin-top: 15px;
+}
+
+.imagePreview {
+  max-width: 100%;
+  height: auto;
+  margin-top: 15px;
+  border-radius: 6px;
+  border: 1px solid #e5e7eb;
+}
+

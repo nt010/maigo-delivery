@@ -2,7 +2,8 @@
 
 import { useState, FormEvent } from 'react';
 import { useRouter } from 'next/navigation';
-import { useAuth } from '@/app/contexts/AuthContext'; // 正しいパスを指定
+import { useAuth } from '@/app/contexts/AuthContext';
+import styles from '../admin.module.css';
 
 export default function LoginPage() {
   const [password, setPassword] = useState('');
@@ -15,31 +16,30 @@ export default function LoginPage() {
     setError('');
     const success = await login(password);
     if (success) {
-      router.push('/admin'); // ログイン成功後、管理者トップへ
+      router.push('/admin');
     } else {
       setError('パスワードが間違っています。');
     }
   };
 
   return (
-    <div style={styles.container}>
-      <h1>管理者ログイン</h1>
+    <div className={styles.card}>
+      <h1 className={styles.header}>管理者ログイン</h1>
       <form onSubmit={handleSubmit}>
-        <div style={styles.formGroup}>
-          <label style={styles.label}>パスワード</label>
+        <div className={styles.formGroup}>
+          <label className={styles.label} htmlFor="password">パスワード</label>
           <input
+            id="password"
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
-            style={styles.input}
+            className={styles.input}
           />
         </div>
-        {error && <p style={styles.error}>{error}</p>}
-        <button type="submit" style={styles.button}>ログイン</button>
+        {error && <p className={styles.errorMessage}>{error}</p>}
+        <button type="submit" className={`${styles.btn} ${styles.primary}`}>ログイン</button>
       </form>
     </div>
   );
 }
-// ... (前回のstylesオブジェクトをここに貼り付け)
-const styles: { [key: string]: React.CSSProperties } = { /* ... */ };

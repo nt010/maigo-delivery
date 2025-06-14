@@ -40,16 +40,15 @@ export default function LostItemFormPage() {
     setIsSubmitting(true);
     setError(null);
     const formData = new FormData();
-    formData.append('file', imageFile);
-    formData.append('capturedAt', new Date().toISOString());
-    formData.append('building', building);
-    formData.append('room', room);
-    formData.append('deliveryDate', deliveryDate);
-    formData.append('boxShape', boxShape);
+    formData.append('image', imageFile);
+    formData.append('date', deliveryDate);
+    formData.append('ridgeNumber', building);
+    formData.append('roomNumber', room);
+    formData.append('shape', boxShape);
 
     try {
       const API_ENDPOINT = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
-      const response = await fetch(`${API_ENDPOINT}/lost-items`, {
+      const response = await fetch(`${API_ENDPOINT}/parcels`, {
         method: 'POST',
         body: formData,
       });

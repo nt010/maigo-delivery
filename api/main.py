@@ -6,9 +6,10 @@ import base64
 from datetime import datetime
 from fastapi.middleware.cors import CORSMiddleware
 
+# appインスタンスの作成
 app = FastAPI()
 
-# CORS設定（開発中はすべて許可）
+# CORS設定（開発中はすべて許可）要変更！！
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -26,6 +27,9 @@ def get_db():
     finally:
         db.close()
         print("✅ DBセッションを終了")
+
+"""POST
+"""
 
 # 宅配物登録API
 @app.post("/parcels")
@@ -76,6 +80,9 @@ async def register_parcel(
 
     return parcel
 
+"""GET
+
+"""
 # 宅配物取得API
 @app.get("/parcels")
 def get_parcels_for_frontend(db: Session = Depends(get_db)):
@@ -96,4 +103,50 @@ def get_parcels_for_frontend(db: Session = Depends(get_db)):
         })
 
     print("✅ JSON形式でレスポンスを返却")
+    return result
+
+# ✅ 棟番号で検索（例：/ridge_info/A棟）
+@app.get("/ridge_info/{ridge_number}")
+def get_parcels_by_ridge(ridge_number: str, db: Session = Depends(get_db)):
+    print(f"📡 棟番号 {ridge_number} の宅配物取得リクエスト受信")
+    parcels = crud.get_parcels_by_ridge(db, ridge_number)
+    if not parcels:
+        print("❌ 該当するデータがありません")
+        raise HTTPException(status_code=404, detail="該当する棟番号のデータがありません")
+
+    result = []
+    for p in parcels:
+        result.append({
+            "id": p.id,
+            "ridgeNumber": p.ridgeNumber,
+            "roomNumber": p.roomNumber,
+            "shape": p.shape or "不明",
+            "date": p.date.strftime("%Y/%m/%d") if isinstance(p.date, datetime) else str(p.date),
+            "photoURL": f"data:image/png;base64,{p.image_base64}",
+            "title": "荷物"
+        })
+
+    return result
+
+# ✅ 棟番号＋部屋番号で検索（例：/room_info/A棟/101）
+@app.get("/room_info/{ridge_number}/{room_number}")
+def get_parcels_by_room(ridge_number: str, room_number: str, db: Session = Depends(get_db)):
+    print(f"📡 棟 {ridge_number}・部屋 {room_number} の宅配物取得リクエスト受信")
+    parcels = crud.get_parcels_by_room(db, ridge_number, room_number)
+    if not parcels:
+        print("❌ 該当するデータがありません")
+        raise HTTPException(status_code=404, detail="該当する棟・部屋番号のデータがありません")
+
+    result = []
+    for p in parcels:
+        result.append({
+            "id": p.id,
+            "ridgeNumber": p.ridgeNumber,
+            "roomNumber": p.roomNumber,
+            "shape": p.shape or "不明",
+            "date": p.date.strftime("%Y/%m/%d") if isinstance(p.date, datetime) else str(p.date),
+            "photoURL": f"data:image/png;base64,{p.image_base64}",
+            "title": "荷物"
+        })
+
     return result

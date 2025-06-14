@@ -1,7 +1,7 @@
 # models.py
 # フロントエンドに合わせて命名を統一した、宅配物データの定義
 
-from sqlalchemy import Column, Integer, String, Date, Boolean, Text
+from sqlalchemy import Column, Integer, String, Date, Boolean, Text, DateTime, func
 from database import Base
 
 class Parcel(Base):
@@ -30,3 +30,6 @@ class Parcel(Base):
 
     # 回収済みフラグ
     is_collected = Column(Boolean, default=False)
+
+    # ✅ アップロード日時（登録された日時を自動で記録）
+    uploaded_at = Column(DateTime, nullable=False, default=func.now())

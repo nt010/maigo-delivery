@@ -12,6 +12,7 @@ interface Parcel {
   date: string;
   photoURL: string;
   title: string;
+  upload_at: string;
 }
 
 export default function ParcelsListPage() {
@@ -105,6 +106,7 @@ export default function ParcelsListPage() {
                 <p><strong>棟番号:</strong> {p.ridgeNumber}</p>
                 <p><strong>部屋番号:</strong> {p.roomNumber}</p>
                 <p><strong>形状:</strong> {p.shape}</p>
+                <p><strong>更新日:</strong> {p.upload_at}</p>
               </div>
             </div>
           ))}

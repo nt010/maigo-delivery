@@ -156,7 +156,7 @@ def get_parcels_by_room(ridge_number: str, room_number: str, db: Session = Depen
 
     return result
 
-@app.put("/parcels/{parcel_id}/receive")
+@app.put("/{parcel_id}/receive")
 def mark_as_received(parcel_id: int, db: Session = Depends(get_db)):
     parcel = db.query(models.Parcel).filter_by(id=parcel_id).first()
     if not parcel:

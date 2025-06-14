@@ -30,3 +30,15 @@ def create_parcel(db: Session, parcel_data: dict):
 # DBのすべての情報を返す
 def get_all_parcels(db: Session):
     return db.query(Parcel).all()
+
+# 棟番号で検索
+def get_parcels_by_ridge(db: Session, ridge_number: str):
+    return db.query(Parcel).filter(Parcel.ridgeNumber == ridge_number).all()
+
+# 棟＋部屋番号で検索
+def get_parcels_by_room(db: Session, ridge_number: str, room_number: str):
+    return db.query(Parcel).filter(
+        Parcel.ridgeNumber == ridge_number,
+        Parcel.roomNumber == room_number
+        
+    ).all()

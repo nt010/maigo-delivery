@@ -31,7 +31,6 @@ def get_db():
 """POST
 """
 
-# 宅配物登録API
 @app.post("/parcels")
 async def register_parcel(
     date: str = Form(...),
@@ -64,14 +63,15 @@ async def register_parcel(
     image_base64 = base64.b64encode(image_bytes).decode("utf-8")
     print("✅ 画像をBase64に変換完了")
 
-    # 登録用データ作成
+    # 登録用データ作成（uploaded_at 追加）
     parcel_data = {
         "date": parsed_date,
         "ridgeNumber": ridgeNumber,
         "roomNumber": roomNumber,
         "shape": shape,
         "genre": genre,
-        "image_base64": image_base64
+        "image_base64": image_base64,
+        "uploaded_at": datetime.now()
     }
 
     print("📤 データベースに登録開始")
@@ -81,9 +81,8 @@ async def register_parcel(
     return parcel
 
 """GET
-
 """
-# 宅配物取得API
+
 @app.get("/parcels")
 def get_parcels_for_frontend(db: Session = Depends(get_db)):
     print("📡 全宅配物データの取得リクエスト受信")
@@ -99,13 +98,13 @@ def get_parcels_for_frontend(db: Session = Depends(get_db)):
             "shape": p.shape or "不明",
             "date": p.date.strftime("%Y/%m/%d") if isinstance(p.date, datetime) else str(p.date),
             "photoURL": f"data:image/png;base64,{p.image_base64}",
-            "title": "荷物"
+            "title": "荷物",
+            "uploadedAt": p.uploaded_at.strftime("%Y/%m/%d %H:%M:%S")
         })
 
     print("✅ JSON形式でレスポンスを返却")
     return result
 
-# ✅ 棟番号で検索（例：/ridge_info/A棟）
 @app.get("/ridge_info/{ridge_number}")
 def get_parcels_by_ridge(ridge_number: str, db: Session = Depends(get_db)):
     print(f"📡 棟番号 {ridge_number} の宅配物取得リクエスト受信")
@@ -123,12 +122,12 @@ def get_parcels_by_ridge(ridge_number: str, db: Session = Depends(get_db)):
             "shape": p.shape or "不明",
             "date": p.date.strftime("%Y/%m/%d") if isinstance(p.date, datetime) else str(p.date),
             "photoURL": f"data:image/png;base64,{p.image_base64}",
-            "title": "荷物"
+            "title": "荷物",
+            "uploadedAt": p.uploaded_at.strftime("%Y/%m/%d %H:%M:%S")
         })
 
     return result
 
-# ✅ 棟番号＋部屋番号で検索（例：/room_info/A棟/101）
 @app.get("/room_info/{ridge_number}/{room_number}")
 def get_parcels_by_room(ridge_number: str, room_number: str, db: Session = Depends(get_db)):
     print(f"📡 棟 {ridge_number}・部屋 {room_number} の宅配物取得リクエスト受信")
@@ -146,7 +145,15 @@ def get_parcels_by_room(ridge_number: str, room_number: str, db: Session = Depen
             "shape": p.shape or "不明",
             "date": p.date.strftime("%Y/%m/%d") if isinstance(p.date, datetime) else str(p.date),
             "photoURL": f"data:image/png;base64,{p.image_base64}",
-            "title": "荷物"
+            "title": "荷物",
+            "uploadedAt": p.uploaded_at.strftime("%Y/%m/%d %H:%M:%S")
         })
 
     return result
+
+@app.delete("/cleanup_old_parcels")
+def cleanup_old_parcels(db: Session = Depends(get_db)):
+    count = crud.delete_old_parcels(db)
+    if count == 0:
+        return {"message": "削除対象の宅配物はありません"}
+    return {"message": f"{count} 件の宅配物を削除しました"}

@@ -15,21 +15,22 @@
 日付は2025-6-13　のような型で入力してください
 
 
-✅ 2. 全宅配物を取得（GET）
+# コマンド
+✅ 1. 全宅配物を取得（GET）
 エンドポイント：GET /parcels
 
 用途：登録された全宅配物の一覧を取得
 
 レスポンス形式：JSON（画像は photoURL に Base64）
 
-✅ 3. 棟番号で絞り込み取得（GET）
+✅ 2. 棟番号で絞り込み取得（GET）
 エンドポイント：GET /ridge_info/{ridge_number}
 
 例：/ridge_info/A棟
 
 用途：指定した棟の宅配物だけを取得
 
-✅ 4. 棟＋部屋番号で取得（GET）
+✅ 3. 棟＋部屋番号で取得（GET）
 エンドポイント：GET /room_info/{ridge_number}/{room_number}
 
 例：/room_info/A棟/101

@@ -24,6 +24,9 @@ export default function AdminDashboardPage() {
         <Link href="/admin/lost-item" className={`${styles.btn} ${styles.primary}`}>
           迷子物を送信
         </Link>
+        <Link href="/admin/parcels" className={`${styles.btn} ${styles.primary}`}>
+          登録データ一覧を見る
+        </Link>
         <button onClick={handleLogout} className={`${styles.btn} ${styles.secondary}`}>
           ログアウト
         </button>

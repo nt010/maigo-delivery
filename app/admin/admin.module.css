@@ -110,3 +110,121 @@
   border: 1px solid #e5e7eb;
 }
 
+/* ページ上部のヘッダー */
+.pageHeader {
+  max-width: 1200px;
+  margin: 0 auto 40px auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.pageHeader h1 {
+  font-size: 2rem;
+  margin: 0;
+}
+
+.buttonGroupInline {
+  display: flex;
+  gap: 10px;
+}
+
+/* 登録データ一覧のグリッドレイアウト */
+.parcelGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* 各データカードのスタイル */
+.parcelCard {
+  position: relative; /* チェックボックスの位置の基準 */
+  background-color: #fff;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s;
+}
+.parcelCard:hover {
+  transform: translateY(-5px);
+}
+
+.checkbox {
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  z-index: 10;
+}
+
+/* カード内の画像スタイル */
+.parcelImage {
+  width: 100%;
+  height: 250px;
+  object-fit: cover;
+  display: block;
+}
+
+/* カード内の情報テキスト */
+.parcelInfo {
+  padding: 15px;
+}
+.parcelInfo p {
+  margin: 0 0 8px 0;
+}
+.parcelInfo p:last-child {
+  margin-bottom: 0;
+}
+
+
+/* --- 印刷専用スタイル --- */
+
+/* 印刷時には非表示にする親コンテナを追加 */
+.pageContainer {
+  /* このクラス自体にスタイルは不要 */
+}
+
+/* 印刷エリアは通常時、画面外に隠す */
+.printableArea {
+  position: absolute;
+  left: -9999px;
+  top: -9999px;
+}
+
+@media print {
+  /* 印刷時には、通常表示用のコンテナを非表示にする */
+  .pageContainer {
+    display: none !important;
+  }
+
+  /* 印刷エリアだけを表示し、ページの先頭に配置する */
+  .printableArea {
+    display: block !important;
+    position: static; /* 画面外への移動を解除 */
+  }
+  
+  /* 印刷用のテーブルスタイル */
+  .printableArea table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    font-size: 12pt;
+  }
+  .printableArea h1 {
+    font-size: 18pt;
+  }
+  .printableArea th, .printableArea td {
+    border: 1px solid #000;
+    padding: 10px;
+    text-align: left;
+  }
+  .printableArea th {
+    background-color: #eee;
+  }
+}

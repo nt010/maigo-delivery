@@ -1,9 +1,13 @@
 # 手順
-1. データベースの作成
+
+1. ライブラリのinstall
+`pip install -r requirements.txt`
+
+2. データベースの作成
 ./api/DB　に移動
 `python create_tables.py`
 
-2. apiサーバの起動
+3. apiサーバの起動
 ./api　に移動
 `python -m uvicorn main:app --reload`
 

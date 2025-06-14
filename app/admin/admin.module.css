@@ -1,0 +1,230 @@
+/* /admin 以下のページにだけ適用されるスタイル */
+
+/* カード型の共通コンテナ */
+.card {
+  max-width: 500px;
+  margin: 40px auto;
+  padding: 30px;
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e5e7eb;
+}
+
+/* ヘッダー */
+.header {
+  text-align: center;
+  margin-bottom: 25px;
+  font-size: 1.75rem; /* 28px */
+  font-weight: 600;
+  color: #333;
+}
+
+/* フォーム関連 */
+.formGroup {
+  margin-bottom: 20px;
+}
+
+.label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 500;
+}
+
+.input,
+.select {
+  width: 100%;
+  padding: 12px;
+  box-sizing: border-box;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  font-size: 1rem;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.input:focus,
+.select:focus {
+  outline: none;
+  border-color: #0070f3;
+  box-shadow: 0 0 0 3px rgba(0, 112, 243, 0.2);
+}
+
+/* ボタン関連 */
+.btn {
+  display: inline-block;
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 600;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 0.2s, transform 0.1s;
+}
+
+.btn:active {
+  transform: translateY(1px);
+}
+
+.primary {
+  background-color: #0070f3;
+  color: white;
+}
+.primary:hover {
+  background-color: #005bb5;
+}
+.primary:disabled {
+  background-color: #a0c3e8;
+  cursor: not-allowed;
+}
+
+.secondary {
+  background-color: #666;
+  color: white;
+}
+.secondary:hover {
+  background-color: #444;
+}
+
+.buttonGroup {
+  margin-top: 25px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* その他 */
+.errorMessage {
+  color: #ef4444;
+  text-align: center;
+  margin-top: 15px;
+}
+
+.imagePreview {
+  max-width: 100%;
+  height: auto;
+  margin-top: 15px;
+  border-radius: 6px;
+  border: 1px solid #e5e7eb;
+}
+
+/* ページ上部のヘッダー */
+.pageHeader {
+  max-width: 1200px;
+  margin: 0 auto 40px auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.pageHeader h1 {
+  font-size: 2rem;
+  margin: 0;
+}
+
+.buttonGroupInline {
+  display: flex;
+  gap: 10px;
+}
+
+/* 登録データ一覧のグリッドレイアウト */
+.parcelGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* 各データカードのスタイル */
+.parcelCard {
+  position: relative; /* チェックボックスの位置の基準 */
+  background-color: #fff;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s;
+}
+.parcelCard:hover {
+  transform: translateY(-5px);
+}
+
+.checkbox {
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  z-index: 10;
+}
+
+/* カード内の画像スタイル */
+.parcelImage {
+  width: 100%;
+  height: 250px;
+  object-fit: cover;
+  display: block;
+}
+
+/* カード内の情報テキスト */
+.parcelInfo {
+  padding: 15px;
+}
+.parcelInfo p {
+  margin: 0 0 8px 0;
+}
+.parcelInfo p:last-child {
+  margin-bottom: 0;
+}
+
+
+/* --- 印刷専用スタイル --- */
+
+/* 印刷時には非表示にする親コンテナを追加 */
+.pageContainer {
+  /* このクラス自体にスタイルは不要 */
+}
+
+/* 印刷エリアは通常時、画面外に隠す */
+.printableArea {
+  position: absolute;
+  left: -9999px;
+  top: -9999px;
+}
+
+@media print {
+  /* 印刷時には、通常表示用のコンテナを非表示にする */
+  .pageContainer {
+    display: none !important;
+  }
+
+  /* 印刷エリアだけを表示し、ページの先頭に配置する */
+  .printableArea {
+    display: block !important;
+    position: static; /* 画面外への移動を解除 */
+  }
+  
+  /* 印刷用のテーブルスタイル */
+  .printableArea table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    font-size: 12pt;
+  }
+  .printableArea h1 {
+    font-size: 18pt;
+  }
+  .printableArea th, .printableArea td {
+    border: 1px solid #000;
+    padding: 10px;
+    text-align: left;
+  }
+  .printableArea th {
+    background-color: #eee;
+  }
+}

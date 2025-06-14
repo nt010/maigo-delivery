@@ -7,48 +7,6 @@ import Typography from "@mui/material/Typography";
 import Header from "./components/Header";
 
 export default function Home() {
-  const deliveries = [
-    {
-      id: 1,
-      ridgeNumber: 1,
-      roomNumber: 101,
-      shape: "四角",
-      date: "2020/01/01",
-      photoURL: "...",
-    },
-    {
-      id: 2,
-      ridgeNumber: 2,
-      roomNumber: 201,
-      shape: "丸",
-      date: "2020/01/02",
-      photoURL: "...",
-    },
-    {
-      id: 3,
-      ridgeNumber: 1,
-      roomNumber: 102,
-      shape: "三角",
-      date: "2020/01/03",
-      photoURL: "...",
-    },
-    {
-      id: 4,
-      ridgeNumber: 3,
-      roomNumber: 301,
-      shape: "四角",
-      date: "2020/01/04",
-      photoURL: "...",
-    },
-    {
-      id: 5,
-      ridgeNumber: 2,
-      roomNumber: 202,
-      shape: "丸",
-      date: "2020/01/05",
-      photoURL: "...",
-    },
-  ];
 
   const router = useRouter();
 

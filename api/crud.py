@@ -1,10 +1,13 @@
+# crud.py
+# 宅配物データに対するDB操作（CRUD）
+
 from sqlalchemy.orm import Session
 from models import Parcel
 from schemas import ParcelCreate
 from fastapi import HTTPException
 from datetime import datetime, timedelta
 
-# 宅配物を作成（同一データがあれば uploaded_at を更新）
+# 宅配物を作成（既存なら uploaded_at を更新、なければ新規作成）
 def create_parcel(db: Session, parcel_data: dict):
     existing = db.query(Parcel).filter_by(
         date=parcel_data["date"],
@@ -13,13 +16,14 @@ def create_parcel(db: Session, parcel_data: dict):
     ).first()
 
     if existing:
-        # 登録済みなら uploaded_at を更新する
         existing.uploaded_at = parcel_data["uploaded_at"]
         db.commit()
         db.refresh(existing)
         return existing
 
-    # 新規登録
+    # 明示的に受取フラグを False に設定（念のため）
+    parcel_data.setdefault("is_received", False)
+
     parcel = Parcel(**parcel_data)
     db.add(parcel)
     db.commit()
@@ -34,7 +38,7 @@ def get_all_parcels(db: Session):
 def get_parcels_by_ridge(db: Session, ridge_number: str):
     return db.query(Parcel).filter(Parcel.ridgeNumber == ridge_number).all()
 
-# 棟番号＋部屋番号で宅配物を検索
+# 棟＋部屋番号で宅配物を検索
 def get_parcels_by_room(db: Session, ridge_number: str, room_number: str):
     return db.query(Parcel).filter(
         Parcel.ridgeNumber == ridge_number,
@@ -51,3 +55,14 @@ def delete_old_parcels(db: Session):
         db.delete(parcel)
     db.commit()
     return count
+
+# 宅配物を「受け取り済み」に更新
+def mark_parcel_as_received(db: Session, parcel_id: int):
+    parcel = db.query(Parcel).filter_by(id=parcel_id).first()
+    if not parcel:
+        raise HTTPException(status_code=404, detail="該当する宅配物が見つかりません")
+
+    parcel.is_received = True
+    db.commit()
+    db.refresh(parcel)
+    return parcel

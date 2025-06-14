@@ -5,6 +5,7 @@ import crud
 import base64
 from datetime import datetime
 from fastapi.middleware.cors import CORSMiddleware
+import models
 
 # appインスタンスの作成
 app = FastAPI()
@@ -43,7 +44,7 @@ async def register_parcel(
 ):
     print("📥 新規宅配物を登録リクエスト受信")
     print(f"📦 情報: 日付={date}, 棟={ridgeNumber}, 部屋={roomNumber}, 形={shape}, ジャンル={genre}")
-    print(f"🖼️ ファイル名: {image.filename}")
+    print(f"🗾️ ファイル名: {image.filename}")
 
     # 日付を datetime.date に変換
     try:
@@ -63,7 +64,7 @@ async def register_parcel(
     image_base64 = base64.b64encode(image_bytes).decode("utf-8")
     print("✅ 画像をBase64に変換完了")
 
-    # 登録用データ作成（uploaded_at 追加）
+    # 登録用データ作成
     parcel_data = {
         "date": parsed_date,
         "ridgeNumber": ridgeNumber,
@@ -71,7 +72,8 @@ async def register_parcel(
         "shape": shape,
         "genre": genre,
         "image_base64": image_base64,
-        "uploaded_at": datetime.now()
+        "uploaded_at": datetime.now(),
+        "is_received": False
     }
 
     print("📤 データベースに登録開始")
@@ -85,7 +87,7 @@ async def register_parcel(
 
 @app.get("/parcels")
 def get_parcels_for_frontend(db: Session = Depends(get_db)):
-    print("📡 全宅配物データの取得リクエスト受信")
+    print("📱 全宅配物データの取得リクエスト受信")
     parcels = crud.get_all_parcels(db)
     print(f"📦 {len(parcels)} 件のデータを取得")
 
@@ -99,7 +101,8 @@ def get_parcels_for_frontend(db: Session = Depends(get_db)):
             "date": p.date.strftime("%Y/%m/%d") if isinstance(p.date, datetime) else str(p.date),
             "photoURL": f"data:image/png;base64,{p.image_base64}",
             "title": "荷物",
-            "uploadedAt": p.uploaded_at.strftime("%Y/%m/%d %H:%M:%S")
+            "uploadedAt": p.uploaded_at.strftime("%Y/%m/%d %H:%M:%S"),
+            "isReceived": p.is_received
         })
 
     print("✅ JSON形式でレスポンスを返却")
@@ -107,7 +110,7 @@ def get_parcels_for_frontend(db: Session = Depends(get_db)):
 
 @app.get("/ridge_info/{ridge_number}")
 def get_parcels_by_ridge(ridge_number: str, db: Session = Depends(get_db)):
-    print(f"📡 棟番号 {ridge_number} の宅配物取得リクエスト受信")
+    print(f"📱 棟番号 {ridge_number} の宅配物取得リクエスト受信")
     parcels = crud.get_parcels_by_ridge(db, ridge_number)
     if not parcels:
         print("❌ 該当するデータがありません")
@@ -123,14 +126,15 @@ def get_parcels_by_ridge(ridge_number: str, db: Session = Depends(get_db)):
             "date": p.date.strftime("%Y/%m/%d") if isinstance(p.date, datetime) else str(p.date),
             "photoURL": f"data:image/png;base64,{p.image_base64}",
             "title": "荷物",
-            "uploadedAt": p.uploaded_at.strftime("%Y/%m/%d %H:%M:%S")
+            "uploadedAt": p.uploaded_at.strftime("%Y/%m/%d %H:%M:%S"),
+            "isReceived": p.is_received
         })
 
     return result
 
 @app.get("/room_info/{ridge_number}/{room_number}")
 def get_parcels_by_room(ridge_number: str, room_number: str, db: Session = Depends(get_db)):
-    print(f"📡 棟 {ridge_number}・部屋 {room_number} の宅配物取得リクエスト受信")
+    print(f"📱 棟 {ridge_number}・部屋 {room_number} の宅配物取得リクエスト受信")
     parcels = crud.get_parcels_by_room(db, ridge_number, room_number)
     if not parcels:
         print("❌ 該当するデータがありません")
@@ -146,10 +150,21 @@ def get_parcels_by_room(ridge_number: str, room_number: str, db: Session = Depen
             "date": p.date.strftime("%Y/%m/%d") if isinstance(p.date, datetime) else str(p.date),
             "photoURL": f"data:image/png;base64,{p.image_base64}",
             "title": "荷物",
-            "uploadedAt": p.uploaded_at.strftime("%Y/%m/%d %H:%M:%S")
+            "uploadedAt": p.uploaded_at.strftime("%Y/%m/%d %H:%M:%S"),
+            "isReceived": p.is_received
         })
 
     return result
+
+@app.put("/parcels/{parcel_id}/receive")
+def mark_as_received(parcel_id: int, db: Session = Depends(get_db)):
+    parcel = db.query(models.Parcel).filter_by(id=parcel_id).first()
+    if not parcel:
+        raise HTTPException(status_code=404, detail="該当する宅配物が見つかりません")
+
+    parcel.is_received = True
+    db.commit()
+    return {"message": "荷物を受け取り済みに更新しました"}
 
 @app.delete("/cleanup_old_parcels")
 def cleanup_old_parcels(db: Session = Depends(get_db)):

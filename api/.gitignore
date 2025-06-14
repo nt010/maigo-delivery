@@ -1,2 +1,3 @@
 # DB
+*.pem
 DB/delivery_items.db

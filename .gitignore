@@ -24,9 +24,6 @@
 .DS_Store
 *.pem
 
-# DB
-DB/delivery_items.db
-
 # debug
 npm-debug.log*
 yarn-debug.log*

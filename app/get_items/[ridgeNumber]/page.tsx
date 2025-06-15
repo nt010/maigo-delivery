@@ -1,5 +1,5 @@
 "use client";
-import { use, useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Button from "@mui/material/Button";
@@ -16,6 +16,7 @@ interface DeliveryItem {
   roomNumber: string;
   shape: string;
   title: string;
+  isReceived: boolean;
 }
 
 export default function RidgeItemsPage({
@@ -28,7 +29,7 @@ export default function RidgeItemsPage({
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [searchValue, setSearchValue] = useState("");
-  const router = useRouter(); 
+  const router = useRouter();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -72,7 +73,6 @@ export default function RidgeItemsPage({
       alert("部屋番号を入力してください");
       return;
     }
-    // routerをここで使う
     router.push(`/room_info/${ridgeNumber}/${roomNumber}`);
   };
 
@@ -126,7 +126,6 @@ export default function RidgeItemsPage({
                     onError={(e) => {
                       const target = e.target as HTMLImageElement;
                       target.src = "";
-                      console.error("画像読み込みエラー:", target.src);
                     }}
                   />
                 )}
@@ -160,7 +159,26 @@ export default function RidgeItemsPage({
           onChange={(e) => setSearchValue(e.target.value)}
           className="border rounded px-3 py-2 text-black bg-white focus:bg-black-200  transition-colors"
         />
-        <Button type="submit" variant="contained" color="primary">
+        <Button
+          type="submit"
+          variant="contained"
+          color="success"
+          size="large"
+          sx={{
+            fontWeight: "bold",
+            fontSize: 20,
+            px: 5,
+            py: 1.5,
+            borderRadius: 8,
+            boxShadow: 4,
+            background: "linear-gradient(90deg, #43e97b 0%, #38f9d7 100%)",
+            color: "#fff",
+            "&:hover": {
+              background: "linear-gradient(90deg, #38f9d7 0%, #43e97b 100%)",
+              opacity: 0.9,
+            },
+          }}
+        >
           検索
         </Button>
       </form>

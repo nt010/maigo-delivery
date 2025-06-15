@@ -1,10 +1,11 @@
 "use client";
-import { useState, useEffect } from "react";
+import { use, useState, useEffect } from "react";
 import Image from "next/image";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import Header from "@/app/components/Header";
 import EmojiEmotionsIcon from "@mui/icons-material/EmojiEmotions";
+import HowToRegIcon from "@mui/icons-material/HowToReg";
 import Button from "@mui/material/Button";
 
 interface DeliveryItem {
@@ -15,14 +16,15 @@ interface DeliveryItem {
   date: string;
   photoURL: string;
   title: string;
+  isReceived: boolean;
 }
 
 export default function RidgeRoomFilteredPage({
   params,
 }: {
-  params: { ridgeNumber: string; roomNumber: string };
+  params: Promise<{ ridgeNumber: string; roomNumber: string }>;
 }) {
-  const { ridgeNumber, roomNumber } = params;
+  const { ridgeNumber, roomNumber } = use(params);
   const [deliveries, setDeliveries] = useState<DeliveryItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -33,7 +35,7 @@ export default function RidgeRoomFilteredPage({
       setError(null);
       try {
         const response = await fetch(
-          `http://127.0.0.1:8002/room_info/${ridgeNumber}/${roomNumber}`
+          `http://127.0.0.1:8000/room_info/${ridgeNumber}/${roomNumber}`
         );
         if (!response.ok) {
           const errorDetail = await response.text();
@@ -56,6 +58,28 @@ export default function RidgeRoomFilteredPage({
   if (loading) return <div>Loading deliveries...</div>;
   if (error) return <div>Error loading deliveries: {error}</div>;
 
+  const handleClick = async (id: number) => {
+    setError(null);
+    try {
+      const response = await fetch(`http://127.0.0.1:8000/${id}/receive`, {
+        method: "PUT",
+      });
+      if (!response.ok) {
+        const errorDetail = await response.text();
+        throw new Error(
+          `HTTP error! status: ${response.status}, detail: ${errorDetail}`
+        );
+      }
+      setDeliveries((prev) =>
+        prev.map((item) =>
+          item.id === Number(id) ? { ...item, isReceived: true } : item
+        )
+      );
+    } catch (e: any) {
+      setError(e.message);
+    }
+  };
+
   return (
     <main className="min-h-screen flex flex-col bg-gradient-to-br from-yellow-100 via-orange-100 to-yellow-200">
       <Header title="迷子デリバリー" showBackButton />
@@ -73,8 +97,21 @@ export default function RidgeRoomFilteredPage({
           }}
         >
           <div className="flex flex-col items-center mb-6">
-            <EmojiEmotionsIcon sx={{ fontSize: 48, color: "#43a047" }} />
-            <Typography variant="h4" align="center" fontWeight="bold" gutterBottom>
+            {deliveries.map((item) => (
+              <div key={item.id}>
+                {item.isReceived ? (
+                  <HowToRegIcon sx={{ fontSize: 48, color: "#FFB300" }} />
+                ) : (
+                  <EmojiEmotionsIcon sx={{ fontSize: 48, color: "#43a047" }} />
+                )}
+              </div>
+            ))}
+            <Typography
+              variant="h4"
+              align="center"
+              fontWeight="bold"
+              gutterBottom
+            >
               {ridgeNumber}棟 {roomNumber}号室の荷物一覧
             </Typography>
           </div>
@@ -105,8 +142,8 @@ export default function RidgeRoomFilteredPage({
                       style={{ borderRadius: 8, objectFit: "cover" }}
                       onError={(e) => {
                         const target = e.target as HTMLImageElement;
-                        target.src = "https://placehold.co/80x80/cccccc/000000?text=NoImage";
-                        console.error("画像読み込みエラー:", target.src);
+                        target.src =
+                          "https://placehold.co/80x80/cccccc/000000?text=NoImage";
                       }}
                     />
                   )}
@@ -128,28 +165,35 @@ export default function RidgeRoomFilteredPage({
               ))
             )}
           </div>
-          <div className="flex justify-center">
-            <Button
-              variant="contained"
-              color="success"
-              size="large"
-              sx={{
-                fontWeight: "bold",
-                fontSize: 20,
-                px: 5,
-                py: 1.5,
-                borderRadius: 8,
-                boxShadow: 4,
-                background: "linear-gradient(90deg, #43e97b 0%, #38f9d7 100%)",
-                color: "#fff",
-                "&:hover": {
-                  background: "linear-gradient(90deg, #38f9d7 0%, #43e97b 100%)",
-                  opacity: 0.9,
-                },
-              }}
-            >
-              受け取りました
-            </Button>
+          <div className="flex flex-col space-y-4">
+            {deliveries.map((item) => (
+              <Button
+                key={item.id}
+                variant="contained"
+                color="success"
+                size="large"
+                onClick={() => handleClick(item.id)}
+                sx={{
+                  fontWeight: "bold",
+                  fontSize: 20,
+                  px: 5,
+                  py: 1.5,
+                  borderRadius: 8,
+                  boxShadow: 4,
+                  background:
+                    "linear-gradient(90deg, #43e97b 0%, #38f9d7 100%)",
+                  color: "#fff",
+                  "&:hover": {
+                    background:
+                      "linear-gradient(90deg, #38f9d7 0%, #43e97b 100%)",
+                    opacity: 0.9,
+                  },
+                }}
+                disabled={item.isReceived}
+              >
+                {item.isReceived ? "受け取り済み" : "受け取りました"}
+              </Button>
+            ))}
           </div>
         </Paper>
       </div>

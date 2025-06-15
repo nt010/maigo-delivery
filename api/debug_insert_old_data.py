@@ -22,20 +22,20 @@ def generate_random_parcels(n=100):
 
         parcel = Parcel(
             date=base_date.date(),
-            ridgeNumber=random.choice(RANDOM_RIDGES),  # 1〜8棟
+            ridgeNumber=random.choice(RANDOM_RIDGES),      # 1〜8棟
             roomNumber=random.choice(RANDOM_ROOMS),
             shape=random.choice(RANDOM_SHAPES),
             genre=random.choice(RANDOM_GENRES),
             image_base64=base64.b64encode(f"test_image_{i}".encode()).decode(),
             uploaded_at=base_date,
-            is_collected=random.choice([True, False])
+            is_received=random.choice([True, False])       # ← 追加
         )
 
         db.add(parcel)
 
     db.commit()
     db.close()
-    print(f"✅ {n}件の疑似データを登録しました")
+    print(f"✅ {n} 件の疑似データを登録しました")
 
 if __name__ == "__main__":
     generate_random_parcels()

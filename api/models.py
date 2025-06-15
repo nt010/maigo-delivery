@@ -29,7 +29,7 @@ class Parcel(Base):
     image_base64 = Column(Text, nullable=False)
 
     # 回収済みフラグ
-    is_collected = Column(Boolean, default=False)
+    is_received = Column(Boolean, default=False)
 
     # ✅ アップロード日時（登録された日時を自動で記録）
     uploaded_at = Column(DateTime, nullable=False, default=func.now())

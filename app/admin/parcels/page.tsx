@@ -12,6 +12,8 @@ interface Parcel {
   date: string;
   photoURL: string;
   title: string;
+  uploadedAt: string;
+  isReceived: boolean;
 }
 
 export default function ParcelsListPage() {
@@ -105,6 +107,8 @@ export default function ParcelsListPage() {
                 <p><strong>棟番号:</strong> {p.ridgeNumber}</p>
                 <p><strong>部屋番号:</strong> {p.roomNumber}</p>
                 <p><strong>形状:</strong> {p.shape}</p>
+                <p><strong>更新日:</strong> {p.uploadedAt}</p>
+                <p><strong>ステータス:{p.isReceived ? "受け取り済み" : "受け取りました"}</strong></p>
               </div>
             </div>
           ))}

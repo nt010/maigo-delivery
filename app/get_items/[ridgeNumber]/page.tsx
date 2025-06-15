@@ -2,10 +2,12 @@
 import { use, useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import Button from "@mui/material/Button";
+import IconButton from "@mui/material/IconButton";
+import SearchIcon from "@mui/icons-material/Search";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import EmojiEmotionsIcon from "@mui/icons-material/EmojiEmotions";
+import HowToRegIcon from "@mui/icons-material/HowToReg";
 import Header from "@/app/components/Header";
 
 interface DeliveryItem {
@@ -16,19 +18,20 @@ interface DeliveryItem {
   roomNumber: string;
   shape: string;
   title: string;
+  isReceived: boolean;
 }
 
 export default function RidgeItemsPage({
   params,
 }: {
-  params: { ridgeNumber: string };
+  params: Promise<{ ridgeNumber: string }>;
 }) {
-  const { ridgeNumber } = params;
+  const { ridgeNumber } = use(params);
   const [deliveries, setDeliveries] = useState<DeliveryItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [searchValue, setSearchValue] = useState("");
-  const router = useRouter(); 
+  const router = useRouter();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -36,7 +39,7 @@ export default function RidgeItemsPage({
       setError(null);
       try {
         const response = await fetch(
-          `http://127.0.0.1:8002/ridge_info/${ridgeNumber}`
+          `http://127.0.0.1:8000/ridge_info/${ridgeNumber}`
         );
         if (!response.ok) {
           const errorDetail = await response.text();
@@ -72,7 +75,6 @@ export default function RidgeItemsPage({
       alert("部屋番号を入力してください");
       return;
     }
-    // routerをここで使う
     router.push(`/room_info/${ridgeNumber}/${roomNumber}`);
   };
 
@@ -93,7 +95,12 @@ export default function RidgeItemsPage({
           }}
         >
           <div className="flex flex-col items-center mb-6">
-            <EmojiEmotionsIcon sx={{ fontSize: 48, color: "#43a047" }} />
+            {deliveries.length > 0 &&
+            deliveries.every((item) => item.isReceived) ? (
+              <HowToRegIcon sx={{ fontSize: 48, color: "#FFB300" }} />
+            ) : (
+              <EmojiEmotionsIcon sx={{ fontSize: 48, color: "#43a047" }} />
+            )}
             <Typography
               variant="h4"
               align="center"
@@ -126,7 +133,6 @@ export default function RidgeItemsPage({
                     onError={(e) => {
                       const target = e.target as HTMLImageElement;
                       target.src = "";
-                      console.error("画像読み込みエラー:", target.src);
                     }}
                   />
                 )}
@@ -160,9 +166,20 @@ export default function RidgeItemsPage({
           onChange={(e) => setSearchValue(e.target.value)}
           className="border rounded px-3 py-2 text-black bg-white focus:bg-black-200  transition-colors"
         />
-        <Button type="submit" variant="contained" color="primary">
-          検索
-        </Button>
+        <IconButton
+          color="success"
+          size="large"
+          onClick={handleSearch}
+          sx={{
+            backgroundColor: "#FFD600",
+            "&:hover": {
+              backgroundColor: "#FFB300",
+            },
+            color: "#333",
+          }}
+        >
+          <SearchIcon />
+        </IconButton>
       </form>
     </main>
   );

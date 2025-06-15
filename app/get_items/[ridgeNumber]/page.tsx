@@ -2,7 +2,8 @@
 import { use, useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import Button from "@mui/material/Button";
+import IconButton from "@mui/material/IconButton";
+import SearchIcon from "@mui/icons-material/Search";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import EmojiEmotionsIcon from "@mui/icons-material/EmojiEmotions";
@@ -159,28 +160,20 @@ export default function RidgeItemsPage({
           onChange={(e) => setSearchValue(e.target.value)}
           className="border rounded px-3 py-2 text-black bg-white focus:bg-black-200  transition-colors"
         />
-        <Button
-          type="submit"
-          variant="contained"
+        <IconButton
           color="success"
           size="large"
+          onClick={handleSearch}
           sx={{
-            fontWeight: "bold",
-            fontSize: 20,
-            px: 5,
-            py: 1.5,
-            borderRadius: 8,
-            boxShadow: 4,
-            background: "linear-gradient(90deg, #43e97b 0%, #38f9d7 100%)",
-            color: "#fff",
+            backgroundColor: "#FFD600", 
             "&:hover": {
-              background: "linear-gradient(90deg, #38f9d7 0%, #43e97b 100%)",
-              opacity: 0.9,
+              backgroundColor: "#FFB300", 
             },
+            color: "#333", 
           }}
         >
-          検索
-        </Button>
+          <SearchIcon />
+        </IconButton>
       </form>
     </main>
   );

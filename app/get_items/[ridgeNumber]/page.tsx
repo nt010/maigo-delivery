@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { use, useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Button from "@mui/material/Button";
@@ -22,9 +22,9 @@ interface DeliveryItem {
 export default function RidgeItemsPage({
   params,
 }: {
-  params: { ridgeNumber: string };
+  params: Promise<{ ridgeNumber: string }>;
 }) {
-  const { ridgeNumber } = params;
+  const { ridgeNumber } = use(params);
   const [deliveries, setDeliveries] = useState<DeliveryItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);

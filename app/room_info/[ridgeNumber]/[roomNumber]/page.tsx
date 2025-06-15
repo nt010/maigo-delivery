@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { use, useState, useEffect } from "react";
 import Image from "next/image";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
@@ -21,9 +21,9 @@ interface DeliveryItem {
 export default function RidgeRoomFilteredPage({
   params,
 }: {
-  params: { ridgeNumber: string; roomNumber: string };
+  params: Promise<{ ridgeNumber: string; roomNumber: string }>;
 }) {
-  const { ridgeNumber, roomNumber } = params;
+  const { ridgeNumber, roomNumber } = use(params);
   const [deliveries, setDeliveries] = useState<DeliveryItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);

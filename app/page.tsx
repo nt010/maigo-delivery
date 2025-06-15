@@ -1,7 +1,7 @@
 "use client";
 import { useRouter } from "next/navigation";
 import RidgeButton from "./components/RidgeButton";
-import EmojiEmotionsIcon from "@mui/icons-material/EmojiEmotions";
+import ScreenSearchDesktopIcon from '@mui/icons-material/ScreenSearchDesktop';
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import Header from "./components/Header";
@@ -33,7 +33,7 @@ export default function Home() {
         }}
       >
         <div className="flex flex-col items-center mb-6">
-          <EmojiEmotionsIcon sx={{ fontSize: 48, color: "#FFB300" }} />
+          <ScreenSearchDesktopIcon sx={{ fontSize: 48, color: "#FFB300" }} />
           <Typography variant="h3" align="center" fontWeight="bold" gutterBottom>
             📦 未受取の荷物
           </Typography>

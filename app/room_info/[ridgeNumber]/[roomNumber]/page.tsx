@@ -5,6 +5,7 @@ import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import Header from "@/app/components/Header";
 import EmojiEmotionsIcon from "@mui/icons-material/EmojiEmotions";
+import HowToRegIcon from "@mui/icons-material/HowToReg";
 import Button from "@mui/material/Button";
 
 interface DeliveryItem {
@@ -60,10 +61,9 @@ export default function RidgeRoomFilteredPage({
   const handleClick = async (id: number) => {
     setError(null);
     try {
-      const response = await fetch(
-        `http://127.0.0.1:8002/${id}/receive`,
-        { method: "PUT" }
-      );
+      const response = await fetch(`http://127.0.0.1:8002/${id}/receive`, {
+        method: "PUT",
+      });
       if (!response.ok) {
         const errorDetail = await response.text();
         throw new Error(
@@ -97,8 +97,19 @@ export default function RidgeRoomFilteredPage({
           }}
         >
           <div className="flex flex-col items-center mb-6">
-            <EmojiEmotionsIcon sx={{ fontSize: 48, color: "#43a047" }} />
-            <Typography variant="h4" align="center" fontWeight="bold" gutterBottom>
+            {deliveries.map((item) =>
+              item.isReceived ? (
+                <HowToRegIcon sx={{ fontSize: 48, color: "#FFB300" }} />
+              ) : (
+                <EmojiEmotionsIcon sx={{ fontSize: 48, color: "#43a047" }} />
+              )
+            )}
+            <Typography
+              variant="h4"
+              align="center"
+              fontWeight="bold"
+              gutterBottom
+            >
               {ridgeNumber}棟 {roomNumber}号室の荷物一覧
             </Typography>
           </div>
@@ -129,7 +140,8 @@ export default function RidgeRoomFilteredPage({
                       style={{ borderRadius: 8, objectFit: "cover" }}
                       onError={(e) => {
                         const target = e.target as HTMLImageElement;
-                        target.src = "https://placehold.co/80x80/cccccc/000000?text=NoImage";
+                        target.src =
+                          "https://placehold.co/80x80/cccccc/000000?text=NoImage";
                       }}
                     />
                   )}
@@ -166,10 +178,12 @@ export default function RidgeRoomFilteredPage({
                   py: 1.5,
                   borderRadius: 8,
                   boxShadow: 4,
-                  background: "linear-gradient(90deg, #43e97b 0%, #38f9d7 100%)",
+                  background:
+                    "linear-gradient(90deg, #43e97b 0%, #38f9d7 100%)",
                   color: "#fff",
                   "&:hover": {
-                    background: "linear-gradient(90deg, #38f9d7 0%, #43e97b 100%)",
+                    background:
+                      "linear-gradient(90deg, #38f9d7 0%, #43e97b 100%)",
                     opacity: 0.9,
                   },
                 }}

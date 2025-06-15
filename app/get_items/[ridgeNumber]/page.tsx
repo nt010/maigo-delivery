@@ -7,6 +7,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import EmojiEmotionsIcon from "@mui/icons-material/EmojiEmotions";
+import HowToRegIcon from "@mui/icons-material/HowToReg";
 import Header from "@/app/components/Header";
 
 interface DeliveryItem {
@@ -94,7 +95,12 @@ export default function RidgeItemsPage({
           }}
         >
           <div className="flex flex-col items-center mb-6">
-            <EmojiEmotionsIcon sx={{ fontSize: 48, color: "#43a047" }} />
+            {deliveries.length > 0 &&
+            deliveries.every((item) => item.isReceived) ? (
+              <HowToRegIcon sx={{ fontSize: 48, color: "#FFB300" }} />
+            ) : (
+              <EmojiEmotionsIcon sx={{ fontSize: 48, color: "#43a047" }} />
+            )}
             <Typography
               variant="h4"
               align="center"
@@ -165,11 +171,11 @@ export default function RidgeItemsPage({
           size="large"
           onClick={handleSearch}
           sx={{
-            backgroundColor: "#FFD600", 
+            backgroundColor: "#FFD600",
             "&:hover": {
-              backgroundColor: "#FFB300", 
+              backgroundColor: "#FFB300",
             },
-            color: "#333", 
+            color: "#333",
           }}
         >
           <SearchIcon />

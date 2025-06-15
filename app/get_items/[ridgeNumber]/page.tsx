@@ -39,7 +39,7 @@ export default function RidgeItemsPage({
       setError(null);
       try {
         const response = await fetch(
-          `http://127.0.0.1:8002/ridge_info/${ridgeNumber}`
+          `http://127.0.0.1:8000/ridge_info/${ridgeNumber}`
         );
         if (!response.ok) {
           const errorDetail = await response.text();

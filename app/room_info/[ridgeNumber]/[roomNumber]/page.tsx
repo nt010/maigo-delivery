@@ -35,7 +35,7 @@ export default function RidgeRoomFilteredPage({
       setError(null);
       try {
         const response = await fetch(
-          `http://127.0.0.1:8002/room_info/${ridgeNumber}/${roomNumber}`
+          `http://127.0.0.1:8000/room_info/${ridgeNumber}/${roomNumber}`
         );
         if (!response.ok) {
           const errorDetail = await response.text();
@@ -61,7 +61,7 @@ export default function RidgeRoomFilteredPage({
   const handleClick = async (id: number) => {
     setError(null);
     try {
-      const response = await fetch(`http://127.0.0.1:8002/${id}/receive`, {
+      const response = await fetch(`http://127.0.0.1:8000/${id}/receive`, {
         method: "PUT",
       });
       if (!response.ok) {

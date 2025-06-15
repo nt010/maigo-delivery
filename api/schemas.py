@@ -15,7 +15,8 @@ class ParcelCreate(BaseModel):
 class ParcelRead(ParcelCreate):
     id: int
     is_collected: bool
-    uploaded_at: datetime        # ← 更新日を追加
+    is_received: bool           # ← 受け取り済みフラグを追加
+    uploaded_at: datetime       # ← 登録日時
 
     class Config:
         from_attributes = True

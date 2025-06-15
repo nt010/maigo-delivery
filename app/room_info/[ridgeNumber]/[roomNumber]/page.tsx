@@ -97,13 +97,15 @@ export default function RidgeRoomFilteredPage({
           }}
         >
           <div className="flex flex-col items-center mb-6">
-            {deliveries.map((item) =>
-              item.isReceived ? (
-                <HowToRegIcon sx={{ fontSize: 48, color: "#FFB300" }} />
-              ) : (
-                <EmojiEmotionsIcon sx={{ fontSize: 48, color: "#43a047" }} />
-              )
-            )}
+            {deliveries.map((item) => (
+              <div key={item.id}>
+                {item.isReceived ? (
+                  <HowToRegIcon sx={{ fontSize: 48, color: "#FFB300" }} />
+                ) : (
+                  <EmojiEmotionsIcon sx={{ fontSize: 48, color: "#43a047" }} />
+                )}
+              </div>
+            ))}
             <Typography
               variant="h4"
               align="center"
